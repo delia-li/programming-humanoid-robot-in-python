@@ -1,9 +1,9 @@
-'''In this exercise you need to implement an angle interploation function which makes NAO executes keyframe motion
+'''In this exercise you need to implement an angle interpolation function which makes NAO executes keyframe motion
 
 * Tasks:
     1. complete the code in `AngleInterpolationAgent.angle_interpolation`,
-       you are free to use splines interploation or Bezier interploation,
-       but the keyframes provided are for Bezier curves, you can simply ignore some data for splines interploation,
+       you are free to use splines interpolation or Bezier interpolation,
+       but the keyframes provided are for Bezier curves, you can simply ignore some data for splines interpolation,
        please refer data format below for details.
     2. try different keyframes from `keyframes` folder
 
