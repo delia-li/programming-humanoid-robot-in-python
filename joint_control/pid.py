@@ -5,7 +5,7 @@
     2. adjust PID parameters for NAO in simulation
 
 * Hints:
-    1. the motor in simulation can simple modeled by angle(t) = angle(t-1) + speed * dt
+    1. the motor in simulation can be simply modeled by angle(t) = angle(t-1) + speed * dt
     2. use self.y to buffer model prediction
 '''
 
@@ -53,6 +53,7 @@ class PIDController(object):
         @return control signal
         '''
         # YOUR CODE HERE
+
 
         return self.u
 
