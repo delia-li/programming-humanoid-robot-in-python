@@ -17,7 +17,7 @@ class MyAgent(SparkAgent):
         action = super(MyAgent, self).think(perception)
         # YOUR CODE HERE
         action.stiffness["LShoulderPitch"] = 0
-        action.stiffness["RShoulderPitch"] = 0
+        # action.stiffness["RShoulderPitch"] = 0
         action.speed["HeadYaw"] = 0.1
         # action.speed["RHipRoll"] = 0.5
         # action.speed["LKneePitch"] = 0.8

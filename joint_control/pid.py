@@ -34,6 +34,7 @@ class PIDController(object):
         self.e1 = np.zeros(size)
         self.e2 = np.zeros(size)
         # ADJUST PARAMETERS BELOW
+        # What do these self values all stand for?
         delay = 0
         self.Kp = 0
         self.Ki = 0
@@ -54,6 +55,12 @@ class PIDController(object):
         '''
         # YOUR CODE HERE (can be simply modeled by angle(t) = angle(t-1) + speed * dt)
         # target.
+        # I think self.dt is dt, but still have no idea where to find t, angle, and speed. Are they all self parameters?
+        # self.u = ? + ? + self.dt
+        # What's delay?
+        # are we adjusting self.u?
+        # How do I test this?
+        # Looked in the lecture slides: Is this modeled by the equation on slide 3?
 
 
         return self.u

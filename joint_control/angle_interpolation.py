@@ -44,6 +44,27 @@ class AngleInterpolationAgent(PIDAgent):
 
         return target_joints
 
+
+'''
+* Tasks:
+    1. complete the code in `AngleInterpolationAgent.angle_interpolation`,
+       you are free to use splines interpolation or Bezier interpolation,
+       but the keyframes provided are for Bezier curves, you can simply ignore some data for splines interpolation,
+       please refer data format below for details.
+    2. try different keyframes from `keyframes` folder
+
+* Keyframe data format:
+    keyframe := (names, times, keys)
+    names := [str, ...]  # list of joint names
+    times := [[float, float, ...], [float, float, ...], ...]
+    # times is a matrix of floats: Each line corresponding to a joint, and column element to a key.
+    keys := [[float, [int, float, float], [int, float, float]], ...]
+    # keys is a list of angles in radians or an array of arrays each containing [float angle, Handle1, Handle2],
+    # where Handle is [int InterpolationType, float dTime, float dAngle] describing the handle offsets relative
+    # to the angle and time of the point. The first Bezier param describes the handle that controls the curve
+    # preceding the point, the second describes the curve following the point.
+'''
+
 if __name__ == '__main__':
     agent = AngleInterpolationAgent()
     agent.keyframes = hello()  # CHANGE DIFFERENT KEYFRAMES

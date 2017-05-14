@@ -1,5 +1,8 @@
 '''In this exercise you need to use the learned classifier to recognize current posture of robot
 
+How do we test this?
+Do we apply machine learning here?
+
 * Tasks:
     1. load learned classifier in `PostureRecognitionAgent.__init__`
     2. recognize current posture in `PostureRecognitionAgent.recognize_posture`
@@ -37,4 +40,6 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
 if __name__ == '__main__':
     agent = PostureRecognitionAgent()
     agent.keyframes = hello()  # CHANGE DIFFERENT KEYFRAMES
+    # agent.keyframes = leftBackToStand()
+    # ^This doesn't work. Where do I find the other keyframes? Do I generate them, or are they located somewhere?
     agent.run()
