@@ -31,6 +31,7 @@ class PIDController(object):
         '''
         self.dt = dt
         self.u = np.zeros(size)
+        self.e = np.zeros(size)
         self.e1 = np.zeros(size)
         self.e2 = np.zeros(size)
         # ADJUST PARAMETERS BELOW
@@ -61,7 +62,21 @@ class PIDController(object):
         # are we adjusting self.u?
         # How do I test this?
         # Looked in the lecture slides: Is this modeled by the equation on slide 3?
+        self.sensorJoint = sensor.joint
 
+        #Set prediction
+        self.sensorJoint = sensor.joint + self.u * self.dt
+
+        #First error
+        self.e = target.joint - self.sensorJoint
+
+        #Control
+        self.u = self.u + self.e * (self.Kp + self.Ki * self.dt + self.Kd / self.dt) - self.e1 * \
+                                                (self.Kp + (2 * self.Kd / self.dt))
+
+        #Set other errors
+        self.e2 = self.e1
+        self.e1 = self.e
 
         return self.u
 
