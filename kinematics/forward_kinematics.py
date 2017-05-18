@@ -11,7 +11,7 @@
     3. complete function ForwardKinematicsAgent.forward_kinematics, save the transforms of all body parts in torso
        coordinate into self.transforms of class ForwardKinematicsAgent
 
-* Hints:;hkkj,j,jhv,hjv,hvj
+* Hints:
     the local_trans has to consider different joint axes and link parameters for different joints
 '''
 
