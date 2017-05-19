@@ -40,6 +40,10 @@ class AngleInterpolationAgent(PIDAgent):
 
     def angle_interpolation(self, keyframes, perception):
         target_joints = {}
+        # Where do you get time from? Can't access variables and arrays stored in hello.py and others
+        # Which data values should we be ignoring for the Splines interpolation?
+        #
+
         # YOUR CODE HERE
         # for i in range(len(target_joints)):
         #     for j in range(len(self.keyframes)):
@@ -47,7 +51,7 @@ class AngleInterpolationAgent(PIDAgent):
         #         sum = sum + self.times[i][j]
         #     t[i] = sum/len(self.keyframes)
         # t =  - keyframes.times[self.sensor.joints]
-
+        # target_joints = hello()
         # t = keyframes.
 
         return target_joints
