@@ -1,7 +1,7 @@
 
 
 def hello():
-    # Choregraphe bezier export in Python.
+    # Choreograph bezier export in Python.
     names = list()
     times = list()
     keys = list()
