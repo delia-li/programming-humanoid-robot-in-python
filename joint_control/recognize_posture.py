@@ -14,7 +14,7 @@ Do we apply machine learning here?
 
 
 from angle_interpolation import AngleInterpolationAgent
-from keyframes import hello
+from keyframes import hello, leftBackToStand, leftBellyToStand, rightBackToStand, rightBellyToStand, wipe_forehead
 
 
 class PostureRecognitionAgent(AngleInterpolationAgent):
@@ -40,6 +40,4 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
 if __name__ == '__main__':
     agent = PostureRecognitionAgent()
     agent.keyframes = hello()  # CHANGE DIFFERENT KEYFRAMES
-    # agent.keyframes = leftBackToStand()
-    # ^This doesn't work. Where do I find the other keyframes? Do I generate them, or are they located somewhere?
     agent.run()

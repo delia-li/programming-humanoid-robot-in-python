@@ -21,7 +21,7 @@
 
 
 from pid import PIDAgent
-from keyframes import hello
+from keyframes import hello, leftBackToStand, leftBellyToStand, rightBackToStand, rightBellyToStand, wipe_forehead
 
 
 class AngleInterpolationAgent(PIDAgent):
@@ -39,21 +39,37 @@ class AngleInterpolationAgent(PIDAgent):
         return super(AngleInterpolationAgent, self).think(perception)
 
     def angle_interpolation(self, keyframes, perception):
-        target_joints = {}
-        # Where do you get time from? Can't access variables and arrays stored in hello.py and others
-        # Which data values should we be ignoring for the Splines interpolation?
-        #
+        target_joints = {} #Final function for splines interpolation
+        time_diff = {} #2D array with differences between target position and sensor times, for each joint
+        delta = {} #2D array with joint position differences between target and sensor
+        names, times, keys = keyframes #three separate arrays to store returned values from keyframes
 
-        # YOUR CODE HERE
-        # for i in range(len(target_joints)):
-        #     for j in range(len(self.keyframes)):
-        #         double sum = 0
-        #         sum = sum + self.times[i][j]
-        #     t[i] = sum/len(self.keyframes)
+        #Calculate the time differences and joint position differences between the target and sensor
+        for i in range(len(names)):
+            timeTemp = []
+            deltaTemp = []
+            for j in range(len(times)):
+                timeTemp[j] = times[i][j] - perception.time[names[i]] #Target time (see imported) - the time from sensor data
+            for k in range(len(keys)):
+                deltaTemp[k] = keys[i][k][0] - perception.joint[names[i]]
+            time_diff.append(timeTemp)
+            delta.append(deltaTemp)
+
+        #Set parameters needed for Splines interpolation
+        a0 = perception.joint
+        a1 = delta/time_diff #TODO: calculate and avoid error
+        a2 = 0
+        a3 = 0
+
+        #Calculate splines interpolation
+        target_temp = []
+        for i in range(len(delta)):
+            for j in range(len(time_diff[0])):
+                target_temp = a0[i][j] + a1[i][j] + a2[i][j] * time_diff[i][j] * pow(time_diff[i][j], 2) + a3 * time_diff[i][j] * pow(time_diff[i][j], 3)
+            target_joints.append(target_temp)
         # t =  - keyframes.times[self.sensor.joints]
         # target_joints = hello()
-        # t = keyframes.
-
+        # t = keys[0][0][0] for the first splines value
         return target_joints
 
 
@@ -79,5 +95,6 @@ class AngleInterpolationAgent(PIDAgent):
 
 if __name__ == '__main__':
     agent = AngleInterpolationAgent()
-    agent.keyframes = hello()  # CHANGE DIFFERENT KEYFRAMES
+    # agent.keyframes = hello()  # CHANGE DIFFERENT KEYFRAMES
+    agent.keyframes = leftBackToStand()
     agent.run()
