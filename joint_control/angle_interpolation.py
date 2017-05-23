@@ -41,23 +41,29 @@ class AngleInterpolationAgent(PIDAgent):
     def angle_interpolation(self, keyframes, perception):
         target_joints = {} #Final function for splines interpolation
         time_diff = {} #2D array with differences between target position and sensor times, for each joint
-        delta = {} #2D array with joint position differences between target and sensor
+        # delta = {} #2D array with joint position differences between target and sensor
         names, times, keys = keyframes #three separate arrays to store returned values from keyframes
 
         #Calculate the time differences and joint position differences between the target and sensor
         for i in range(len(names)):
             timeTemp = []
-            deltaTemp = []
-            for j in range(len(times)):
-                timeTemp[j] = times[i][j] - perception.time[names[i]] #Target time (see imported) - the time from sensor data
-            for k in range(len(keys)):
-                deltaTemp[k] = keys[i][k][0] - perception.joint[names[i]]
+            # deltaTemp = []
+            for j in range(len(times[i])):
+                timeTemp[j] = times[i][j] - perception.time #Target time (see imported) - the simulation time from sensor data
+                if (times[i][j] < perception.time & j < times[i] - 1):
+                    if(times[i][j + 1] > perception.time):
+                        lower = times[i][j]
+                        higher = times[i][j + 1]
+            # for k in range(len(keys)):
+            #     deltaTemp[k] = keys[i][k][0] - perception.joint[names[i]]
             time_diff.append(timeTemp)
-            delta.append(deltaTemp)
+            # delta.append(deltaTemp)
+
+        # delta = keys perception.joint
 
         #Set parameters needed for Splines interpolation
         a0 = perception.joint
-        a1 = delta/time_diff #TODO: calculate and avoid error
+        # a1 = delta/time_diff #TODO: calculate and avoid error
         a2 = 0
         a3 = 0
 
