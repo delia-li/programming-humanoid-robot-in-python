@@ -62,22 +62,32 @@ class PIDController(object):
         # are we adjusting self.u?
         # How do I test this?
         # Looked in the lecture slides: Is this modeled by the equation on slide 3?
-        self.sensorJoint = sensor.joint
-
-        #Set prediction
-        self.sensorJoint = sensor.joint + self.u * self.dt
-
+        # self.sensorJoint = sensor.joint
         #First error
-        self.e = target.joint - self.sensorJoint
-
-        #Control
-        self.u = self.u + self.e * (self.Kp + self.Ki * self.dt + self.Kd / self.dt) - self.e1 * (self.Kp + (2 * self.Kd / self.dt))
-
-        #Set other errors
-        self.e2 = self.e1
+        self.e = target - sensor
+        self.P = self.Kp * self.e
+        self.D = self.Kd * (self.e - self.e1) / self.dt
         self.e1 = self.e
 
-        return self.u
+        self.e2 = self.e2 + self.e * self.dt
+
+        self.I = self.e2 * self.Ki
+
+        self.u = self.P + self.I + self.D
+
+        self.y.append(self.u)
+        #Set prediction
+        # self.sensorJoint = sensor.joint + self.u * self.dt
+
+
+        #Control
+        # self.u = self.u + self.e * (self.Kp + self.Ki * self.dt + self.Kd / self.dt) - self.e1 * (self.Kp + (2 * self.Kd / self.dt))
+
+        #Set other errors
+        # self.e2 = self.e1
+        # self.e1 = self.e
+
+        return self.y.popleft()
 
 
 class PIDAgent(SparkAgent):
