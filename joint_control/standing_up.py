@@ -7,7 +7,7 @@
 # use semipi
 
 from recognize_posture import PostureRecognitionAgent
-
+from keyframes import hello, leftBackToStand, leftBellyToStand, rightBackToStand, rightBellyToStand, wipe_forehead
 
 class StandingUpAgent(PostureRecognitionAgent):
     def think(self, perception):
@@ -19,6 +19,16 @@ class StandingUpAgent(PostureRecognitionAgent):
         if posture == 'Belly':
             self.keyframes = leftBellyToStand()
         # YOUR CODE HERE
+        elif posture == 'Hello':
+            self.keyframes = hello()
+        elif posture == 'Left':
+            self.keyframes = leftBackToStand()
+        elif posture == 'Right':
+            self.keyframes = rightBackToStand()
+        elif posture == 'Back':
+            self.keyframes = leftBackToStand()
+        elif posture == 'Wipe':
+            self.keyframes = wipe_forehead()
 
 
 class TestStandingUpAgent(StandingUpAgent):
