@@ -12,7 +12,7 @@
 
 from forward_kinematics import ForwardKinematicsAgent
 from numpy.matlib import identity
-
+from math import atan, atan2
 
 class InverseKinematicsAgent(ForwardKinematicsAgent):
     def inverse_kinematics(self, effector_name, transform):
@@ -24,13 +24,38 @@ class InverseKinematicsAgent(ForwardKinematicsAgent):
         '''
         joint_angles = []
         # YOUR CODE HERE
+        joints = self.chains[effector_name]
+        print joints
+        print transform
         return joint_angles
 
     def set_transforms(self, effector_name, transform):
         '''solve the inverse kinematics and control joints use the results
         '''
         # YOUR CODE HERE
+
+        joint_angles = self.inverse_kinematics(effector_name,transform)
         self.keyframes = ([], [], [])  # the result joint angles have to fill in
+
+    def from_transform(transform):
+        # This returns the x, y, and z values
+        x = transform[0][3]
+        y = transform[1][3]
+        z = transform[2][3]
+
+        if transform[0][0] == 1 and transform[1][1] == 1 and transform[2][2] == 1:
+            theta = 0
+            return [x, y, z, 0, 0, 0]
+        else:
+            if transform[0][0] == 1:
+                theta = atan2(transform[2][1], transform[1][1])
+                return [x, y, z, theta, 0, 0]
+            if transform[1][1] == 1:
+                theta = atan2(transform[0][2], transform[0][0])
+                return [x, y, z, 0, theta]
+            if transform[1][1] == 1:
+                theta = atan2(transform[1][0], transform[0][0])
+                return [x, y, z, 0, 0, theta]
 
 if __name__ == '__main__':
     agent = InverseKinematicsAgent()

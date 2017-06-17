@@ -75,15 +75,17 @@ class ForwardKinematicsAgent(AngleInterpolationAgent):
         angleCos = cos(joint_angle)
         # YOUR CODE HERE
         #Set up matrices required for each joint type
-        if joint_name.endswith("Yaw"):
+        if joint_name.endswith("Roll"):
+            # X axis on the 3D coordinate transformation
             T = matrix([
-                [angleCos, 0, angleSin, 0],
-                [0, 1, 0, 0],
-                [-angleSin, 0, angleCos, 0],
+                [angleCos, -angleSin, 0, 0],
+                [angleSin, angleCos, 0, 0],
+                [0, 0, 1, 0],
                 [0, 0, 0, 1]
             ])
 
         elif joint_name.endswith("Pitch"):
+            # Y axis on the 3D coordinate transformation
             T = matrix([
                 [1, 0, 0, 0],
                 [0, angleCos, - angleSin, 0],
@@ -91,11 +93,12 @@ class ForwardKinematicsAgent(AngleInterpolationAgent):
                 [0, 0, 0, 1]
             ])
 
-        elif joint_name.endswith("Roll"):
+        elif joint_name.endswith("Yaw"):
+            # Z axis on the 3D coordinate transformation
             T = matrix([
-                [angleCos, -angleSin, 0, 0],
-                [angleSin, angleCos, 0, 0],
-                [0, 0, 1, 0],
+                [angleCos, 0, angleSin, 0],
+                [0, 1, 0, 0],
+                [-angleSin, 0, angleCos, 0],
                 [0, 0, 0, 1]
             ])
         else:
@@ -113,7 +116,7 @@ class ForwardKinematicsAgent(AngleInterpolationAgent):
             T = identity(4)
             for joint in chain_joints:
                 angle = joints[joint]
-                Tl = local_trans(joint, angle)
+                Tl = self.local_trans(joint, angle)
                 # YOUR CODE HERE
                 T = T * Tl
 
