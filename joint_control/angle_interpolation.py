@@ -32,7 +32,8 @@ class AngleInterpolationAgent(PIDAgent):
                  sync_mode=True):
         super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.keyframes = ([], [], [])
-        self.time_diff = self.perception.time
+        # self.time_diff = self.perception.time
+        self.startTime = -1
 
     def think(self, perception):
         target_joints = self.angle_interpolation(self.keyframes, perception)
@@ -41,10 +42,89 @@ class AngleInterpolationAgent(PIDAgent):
 
     def angle_interpolation(self, keyframes, perception):
         target_joints = {} #Final function for Bezier interpolation
-        time_diff = perception.time - self.time_diff #Rename this variable
+
+        emptyTemp = ([], [], [])
+        if (self.keyframes == emptyTemp):
+
+            return target_joints
+
+        # Starting the computation
+        if self.startTime == -1:
+            self.startTime = perception.time
+
+        # Next, computes timeDiff
+        timeDiff = perception.time - self.startTime
+
+        (names, times, keys) = keyframes
+
+        # Iterates over all joints in the keyframes
+        skippedJoints = 0
+        for (i, name) in enumerate(names):
+            t0 = 0  # keyframe's lower threshold
+            t1 = 0  # keyframe's upper threshold
+            index = 0  # keyframe's upper index, to be used later for interpolation
+
+            jointTimes = times[i]
+            numJointTimes = len(jointTimes)
+
+            # interpolation is finished for this joint, dont do any more steps
+            if timeDiff > jointTimes[-1]:
+                skippedJoints += 1
+                # reset timer and keyframes
+                if skippedJoints == len(names):
+                    self.startTime = -1
+                    self.keyframes = ([], [], [])
+                continue
+
+            # iterate over all times of the current joint to find the right time
+            for j in xrange(numJointTimes):
+                t1 = jointTimes[j]
+
+                # we found the right interval -> break
+                if ((timeDiff >= t0 and timeDiff <= t1)):
+                    index = j
+                    break
+                t0 = t1
+
+            # calculate t-value
+            t = (timeDiff - t0) / (t1 - t0)
+
+            # set p-values
+            # Bezier interpolation is divided into two equation with different parameters.
+            # It's depends on the part of the interpolation function where we are. At the beginning index =0
+
+            # if index == 0  -> no values for p0 and p1
+
+            if index == 0:
+                p0 = 0
+                p1 = 0
+                p3 = keys[i][index][0]
+                p2 = p3 + keys[i][index][1][2]
+            else:
+                p0 = keys[i][index - 1][0]
+                p3 = keys[i][index][0]
+                p1 = p0 + keys[i][index - 1][2][2]
+                p2 = p3 + keys[i][index][1][2]
+
+            # calculate joint angle
+            angle = ((1 - t) ** 3) * p0 + 3 * t * ((1 - t) ** 2) * p1 + 3 * (t ** 2) * (1 - t) * p2 + (t ** 3) * p3
+
+            target_joints[name] = angle
+
+            # without this doesn't work.
+            # IT is said in : http://doc.aldebaran.com/2-1/family/robots/bodyparts.html#effector-chain
+            # "LHipYawPitch and RHipYawPitch share the same motor so they move simultaneously and symmetrically.
+            # In case of conflicting orders, LHipYawPitch always takes the priority.
+
+            # Because of that, we have to add also the angles in RHipYawPitch when LHipYawPitch is called
+            if (name == "LHipYawPitch"):
+                target_joints["RHipYawPitch"] = angle
+                # print degrees(angle)
+
+                    # time_diff = perception.time - self.time_diff #Rename this variable
         # time_diff = {} #2D array with differences between target position and sensor times, for each joint
         # delta = {} #2D array with joint position differences between target and sensor
-        names, times, keys = keyframes #three separate arrays to store returned values from keyframes
+        # names, times, keys = keyframes #three separate arrays to store returned values from keyframes
 
         #Calculate the time differences and joint position differences between the target and sensor
         # for i in range(len(names)):
@@ -64,18 +144,18 @@ class AngleInterpolationAgent(PIDAgent):
         # delta = keys perception.joint
 
         # Loop through all robot joints
-        for i in range(len(names)):
-            joint = names[i]
-            # Update joints included in this position
-            if joint in self.joint_names:
-                # Look at times associated with each joint
-                for j in range(len(times[i]) - 1):
-                    # Calculate first angle before interpolation
-                    if time_diff < times[i][0]:
-                        target_joints[joint] = self.calculate_first_angle(times, keys, i, joint, time_diff)
-                    # Calculate between interpolation
-                    elif times[i][j] < time_diff < times[i][j + 1] and j + 1 < len(times[i]):
-                        target_joints[joint] = self.calculate_bezier_angle(times, keys, i, j, joint, time_diff)
+        # for i in range(len(names)):
+        #     joint = names[i]
+        #     # Update joints included in this position
+        #     if joint in self.joint_names:
+        #         # Look at times associated with each joint
+        #         for j in range(len(times[i]) - 1):
+        #             # Calculate first angle before interpolation
+        #             if time_diff < times[i][0]:
+        #                 target_joints[joint] = self.calculate_first_angle(times, keys, i, joint, time_diff)
+        #             # Calculate between interpolation
+        #             elif times[i][j] < time_diff < times[i][j + 1] and j + 1 < len(times[i]):
+        #                 target_joints[joint] = self.calculate_bezier_angle(times, keys, i, j, joint, time_diff)
 
         return target_joints
 
