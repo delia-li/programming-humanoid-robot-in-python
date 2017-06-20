@@ -32,7 +32,7 @@ class AngleInterpolationAgent(PIDAgent):
                  sync_mode=True):
         super(AngleInterpolationAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.keyframes = ([], [], [])
-        # self.time_diff = self.perception.time
+
         self.startTime = -1
 
     def think(self, perception):
@@ -159,58 +159,58 @@ class AngleInterpolationAgent(PIDAgent):
 
         return target_joints
 
-        def calculate_first_angle(times, keys, index, joint, time_diff):
-            '''
-            @param ...
-            @param index: index of joint
-            @return bezier(t)
-            '''
-            # Set time values
-            t0 = 0.0
-            t3 = times[index][0]
+        # def calculate_first_angle(times, keys, index, joint, time_diff):
+        #     '''
+        #     @param ...
+        #     @param index: index of joint
+        #     @return bezier(t)
+        #     '''
+        #     # Set time values
+        #     t0 = 0.0
+        #     t3 = times[index][0]
+        #
+        #     # Set angle values
+        #     a0 = self.perception.joint[joint]
+        #     a3 = keys[index][0][0]
+        #
+        #     # Control angles
+        #     a1 = keys[index][0][1][2] + a0
+        #     a2 = keys[index][0][2][2] + a3
+        #
+        #     dt = (time_diff) / t3
+        #     return self.calculate_bezier_interpolation(a0, a1, a2, a3, dt)
+        #
+        # def calculate_bezier_angle(times, keys, index, t_index, joint, time_diff):
+        #     '''
+        #     @param ...
+        #     @param index: index of joint
+        #     @param t_index: time index
+        #     @return bezier(t)
+        #     '''
+        #     # Set time values
+        #     t0 = times[index][t_index]
+        #     t3 = times[index][t_index + 1]
+        #     # Control times
+        #     t1 = keys[index][t_index][1][1] + t0
+        #     t2 = keys[index][t_index][2][1] + t3
+        #
+        #     # Set angle values
+        #     a0 = keys[index][t_index][0]
+        #     a3 = keys[index][t_index + 1][0]
+        #     # Control angles
+        #     a1 = keys[index][t_index][1][2] + a0
+        #     a2 = keys[index][t_index][2][2] + a3
+        #
+        #     dt = (time_diff - t0) / (t3 - t0)
+        #
+        #     return self.bezier_interpolation(a0, a1, a2, a3, dt)
 
-            # Set angle values
-            a0 = self.perception.joint[joint]
-            a3 = keys[index][0][0]
-
-            # Control angles
-            a1 = keys[index][0][1][2] + a0
-            a2 = keys[index][0][2][2] + a3
-
-            dt = (time_diff) / t3
-            return self.calculate_bezier_interpolation(a0, a1, a2, a3, dt)
-
-        def calculate_bezier_angle(times, keys, index, t_index, joint, time_diff):
-            '''
-            @param ...
-            @param index: index of joint
-            @param t_index: time index
-            @return bezier(t)
-            '''
-            # Set time values
-            t0 = times[index][t_index]
-            t3 = times[index][t_index + 1]
-            # Control times
-            t1 = keys[index][t_index][1][1] + t0
-            t2 = keys[index][t_index][2][1] + t3
-
-            # Set angle values
-            a0 = keys[index][t_index][0]
-            a3 = keys[index][t_index + 1][0]
-            # Control angles
-            a1 = keys[index][t_index][1][2] + a0
-            a2 = keys[index][t_index][2][2] + a3
-
-            dt = (time_diff - t0) / (t3 - t0)
-
-            return self.bezier_interpolation(a0, a1, a2, a3, dt)
-
-        @staticmethod
-        def bezier_interpolation(a0, a1, a2, a3, dt):
-            c0 = (1 - dt) ** 3
-            c1 = 3 * (1 - dt) ** 2
-            c2 = 3 * (1 - dt)
-            return c0 * a0 + c1 * a1 * dt + c2 * a2 * dt ** 2 + a3 * dt ** 3
+        # @staticmethod
+        # def bezier_interpolation(a0, a1, a2, a3, dt):
+        #     c0 = (1 - dt) ** 3
+        #     c1 = 3 * (1 - dt) ** 2
+        #     c2 = 3 * (1 - dt)
+        #     return c0 * a0 + c1 * a1 * dt + c2 * a2 * dt ** 2 + a3 * dt ** 3
         # Compute conditions
         # def inter_one(P, t):
         #     # find y0, y1
